@@ -1,9 +1,21 @@
+import { useState } from "react";
 import Button from "../components/Button";
 import { Input } from "../components/Input";
 
 export function SignIn() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+
+
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault()
+
+    console.log(email, password)
+  }
+
   return (
-    <form className="
+    <form onSubmit={onSubmit} className="
       flex flex-col gap-4
     ">
       <Input
@@ -11,6 +23,8 @@ export function SignIn() {
         legend="E-mail"
         type="email"
         placeholder="seu@email.com"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
 
       <Input
@@ -18,9 +32,11 @@ export function SignIn() {
         legend="Senha"
         type="password"
         placeholder="123456"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
       />
 
-      <Button>Entrar</Button>
+      <Button type="submit" isLoading={isLoading}>Entrar</Button>
     </form>
   )
 }
