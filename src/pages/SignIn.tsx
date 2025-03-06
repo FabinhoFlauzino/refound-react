@@ -3,37 +3,33 @@ import Button from "../components/Button";
 import { Input } from "../components/Input";
 
 export function SignIn() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
 
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  function onAction(formData: FormData) {
 
-    console.log(email, password)
+    console.log(formData.get("email"))
+
   }
 
   return (
-    <form onSubmit={onSubmit} className="
+    <form action={onAction} className="
       flex flex-col gap-4 w-full
     ">
       <Input
+        name="email"
         required
         legend="E-mail"
         type="email"
         placeholder="seu@email.com"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
       />
 
       <Input
+        name="password"
         required
         legend="Senha"
         type="password"
         placeholder="123456"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
       />
 
       <Button type="submit" isLoading={isLoading}>Entrar</Button>
