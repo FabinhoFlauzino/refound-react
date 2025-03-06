@@ -13,14 +13,19 @@ const variants = {
   }
 }
 
-export default function Button({ children, isLoading, className,type = "button", variant = "base", ...rest }: Props) {
+export default function Button({ children, isLoading, className, type = "button", variant = "base", ...rest }: Props) {
   return (
-    <button type={type} {...rest} disabled={isLoading}
+    <button type={type}
+      disabled={isLoading}
       className={classMerge([
         "flex items-center justify-center bg-green-100 rounded-lg text-white cursor-pointer hover:bg-green-200 transition ease-linear disabled:opacity-50 disabled:cursor-not-allowed",
         variants.button[variant],
+        isLoading && "cursor-progress",
         className
       ])}
-    >{children}</button>
+      {...rest}
+    >
+      {children}
+    </button>
   )
 }
