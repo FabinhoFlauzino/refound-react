@@ -1,8 +1,10 @@
 type RefundAPIResponse = {
+  [x: string]: any
+  refund: any
   id: string
   userId: string
   name: string
-  category: CategoriesAPIEnum
+  description: CategoriesAPIEnum
   amount: number
   filename: string
   user: {

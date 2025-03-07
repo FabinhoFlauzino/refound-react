@@ -3,5 +3,5 @@ enum CategoriesAPIEnum {
   Others = "others",
   Services = "services",
   Transport = "transport",
-  Accomodation = "accomodation"
+  Accomodation = "accommodation"
 }
