@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../components/Input";
 import { Select } from "../components/Select";
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/categories";
@@ -9,6 +9,7 @@ import fileSvg from "../assets/file.svg"
 import { z, ZodError } from "zod";
 import { AxiosError } from "axios";
 import { api } from "../services/api";
+import { formatCurrency } from "../utils/formatCurrency";
 
 const refundSchema = z.object({
   name: z.string().min(3, { message: "Informe um nome claro para sua solicitação" }),
@@ -22,6 +23,7 @@ export default function Refund() {
   const [category, setCategory] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [file, setFile] = useState<File | null>(null)
+  const [fileURL, setFileURL] = useState<string | null>(null)
 
   const navigate = useNavigate()
   const params = useParams<{ id: string }>()
@@ -36,7 +38,7 @@ export default function Refund() {
     try {
       setIsLoading(true)
 
-      if(!file) {
+      if (!file) {
         return alert("Selecione um arquivo de comprovante")
       }
 
@@ -68,7 +70,7 @@ export default function Refund() {
         return alert(error.issues[0].message)
       }
 
-      if(error instanceof AxiosError) {
+      if (error instanceof AxiosError) {
         return alert(error.response?.data.message)
       }
 
@@ -78,6 +80,33 @@ export default function Refund() {
     }
 
   }
+
+  async function fetchRefund(id: string) {
+    try {
+
+      const { data } = await api.get<RefundAPIResponse>(`/refunds/${id}`)
+
+      setName(data.name)
+      setCategory(data.description)
+      setAmount(formatCurrency(data.amount))
+      setFileURL(data.filename)
+
+    } catch (error) {
+      console.log(error);
+
+      if (error instanceof AxiosError) {
+        alert(error.response?.data.message)
+      }
+
+      alert("Não foi possível carregar")
+    }
+  }
+
+  useEffect(() => {
+    if (params.id) {
+      fetchRefund(params.id)
+    }
+  }, [params.id])
 
   return (
     <form onSubmit={onSubmit} className="bg-gray-500 w-full rounded-xl flex flex-col p-10 gap-6 lg:min-w-[512px]">
@@ -120,8 +149,8 @@ export default function Refund() {
         />
       </div>
 
-      {params.id ? (
-        <a href="/comprovante"
+      {(params.id && fileURL) ? (
+        <a href={`http://localhost:3333/${fileURL}`}
           className="text-sm text-green-100 font-semibold flex justify-center items-center gap-2 my-6 hover:opacity-80 transition ease-linear"
         >
           <img src={fileSvg} alt="Icone arquivo" className="w-5" />
