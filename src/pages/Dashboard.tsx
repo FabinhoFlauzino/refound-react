@@ -26,8 +26,9 @@ export function Dashboard() {
 
   async function fetchRefounds() {
     try {
-      const response = await api.get(`/refunds?name=${name.trim()}&page=${page}&perPage=${PER_PAGE}`)
-      console.log(response)
+      const response = await api.get<RefundsPaginationAPIResponse>(`/refunds?name=${name.trim()}&page=${page}&perPage=${PER_PAGE}`)
+
+      console.log(response.data.pagination.page)
     } catch (error) {
       if(error instanceof AxiosError) {
         console.log(error);
@@ -38,13 +39,13 @@ export function Dashboard() {
     }
   }
 
-  function handlePagination(action: "next" | "previus") {
+  function handlePagination(action: "next" | "previous") {
     setPage((prevPage) => {
       if (action === "next" && prevPage < totalOfPage) {
         return prevPage + 1
       }
 
-      if (action === "previus" && prevPage > 1) {
+      if (action === "previous" && prevPage > 1) {
         return prevPage - 1
       }
 
@@ -85,7 +86,7 @@ export function Dashboard() {
         current={page}
         total={totalOfPage}
         onNext={() => handlePagination("next")}
-        onPrevius={() => handlePagination("previus")}
+        onPrevious={() => handlePagination("previous")}
       />
     </div>
   )
